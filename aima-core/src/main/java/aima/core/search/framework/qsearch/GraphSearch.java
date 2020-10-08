@@ -1,5 +1,6 @@
 package aima.core.search.framework.qsearch;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Queue;
@@ -47,7 +48,8 @@ import aima.core.search.framework.problem.Problem;
  */
 public class GraphSearch<S, A> extends TreeSearch<S, A> {
 
-	private Set<S> explored = new HashSet<>();
+//	private Set<S> explored = new HashSet<>();
+	private HashMap<S,Node<S,A>> explored = new HashMap<>();
 
 	public GraphSearch() {
 		this(new NodeFactory<>());
@@ -72,11 +74,31 @@ public class GraphSearch<S, A> extends TreeSearch<S, A> {
 	 * Inserts the node at the tail of the frontier if the corresponding state
 	 * was not yet explored.
 	 */
+//	@Override
+//	protected void addToFrontier(Node<S, A> node) {
+//		if (!explored.contains(node.getState())) {
+//			frontier.add(node);
+//			updateMetrics(frontier.size());
+//		}
+//	}
+	
+	/**
+	 * Inserts the node at the tail of the frontier if the corresponding state
+	 * was not yet explored.
+	 */
 	@Override
 	protected void addToFrontier(Node<S, A> node) {
-		if (!explored.contains(node.getState())) {
+		if (!explored.containsKey(node.getState())) {
 			frontier.add(node);
 			updateMetrics(frontier.size());
+		}else {
+			Node<S,A> exploredNode = explored.get(node.getState());
+			if(node.getPathCost() < exploredNode.getPathCost()) {
+				explored.remove(node.getState());
+				frontier.add(node);
+				updateMetrics(frontier.size());
+				metrics.incrementInt(METRIC_NODES_EXPANDED_REINSERTED_IN_FRONTIER);
+			}
 		}
 	}
 
@@ -92,7 +114,7 @@ public class GraphSearch<S, A> extends TreeSearch<S, A> {
 	protected Node<S, A> removeFromFrontier() {
 		cleanUpFrontier(); // not really necessary because isFrontierEmpty should be called before...
 		Node<S, A> result = frontier.remove();
-		explored.add(result.getState());
+		explored.put(result.getState(), result);
 		updateMetrics(frontier.size());
 		return result;
 	}
@@ -113,7 +135,7 @@ public class GraphSearch<S, A> extends TreeSearch<S, A> {
 	 * of the frontier.
 	 */
 	private void cleanUpFrontier() {
-		while (!frontier.isEmpty() && explored.contains(frontier.element().getState()))
+		while (!frontier.isEmpty() && explored.containsKey(frontier.element().getState()))
 			frontier.remove();
 	}
 }

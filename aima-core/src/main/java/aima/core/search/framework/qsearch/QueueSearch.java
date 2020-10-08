@@ -4,6 +4,7 @@ import aima.core.search.framework.Metrics;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.NodeFactory;
 import aima.core.search.framework.problem.Problem;
+import aima.core.search.informed.EvaluationFunction;
 
 import java.util.Optional;
 import java.util.Queue;
@@ -27,6 +28,9 @@ public abstract class QueueSearch<S, A> {
 	public static final String METRIC_QUEUE_SIZE = "queueSize";
 	public static final String METRIC_MAX_QUEUE_SIZE = "maxQueueSize";
 	public static final String METRIC_PATH_COST = "pathCost";
+	public static final String METRIC_NODES_EXPANDED_REINSERTED_IN_FRONTIER = "nodesReinsertedFrontier"; //Nodes reinserted in frontier
+	
+	public EvaluationFunction<S, A> evalFn;
 
 	final protected NodeFactory<S, A> nodeFactory;
 	protected boolean earlyGoalTest = false;
@@ -81,6 +85,7 @@ public abstract class QueueSearch<S, A> {
 		metrics.set(METRIC_QUEUE_SIZE, 0);
 		metrics.set(METRIC_MAX_QUEUE_SIZE, 0);
 		metrics.set(METRIC_PATH_COST, 0);
+		metrics.set(METRIC_NODES_EXPANDED_REINSERTED_IN_FRONTIER,0);
 	}
 
 	protected void updateMetrics(int queueSize) {

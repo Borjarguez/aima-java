@@ -1,12 +1,12 @@
 package aima.core.search.framework;
 
-import aima.core.search.framework.problem.Problem;
-import aima.core.search.framework.qsearch.QueueSearch;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.function.Consumer;
+
+import aima.core.search.framework.problem.Problem;
+import aima.core.search.framework.qsearch.QueueSearch;
 
 /**
  * Base class for all search algorithms which use a queue to manage not yet

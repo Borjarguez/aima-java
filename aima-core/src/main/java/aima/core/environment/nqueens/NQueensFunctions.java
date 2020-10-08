@@ -1,5 +1,7 @@
 package aima.core.environment.nqueens;
 
+import aima.core.agent.Action;
+import aima.core.environment.eightpuzzle.EightPuzzleBoard;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.problem.GeneralProblem;
 import aima.core.search.framework.problem.Problem;
@@ -99,5 +101,10 @@ public class NQueensFunctions {
      */
     public static double getNumberOfAttackingPairs(Node<NQueensBoard, QueenAction> node) {
         return node.getState().getNumberOfAttackingPairs();
+    }
+
+    // h0
+    public static double nullHeuristic(Node<NQueensBoard, QueenAction> node) {
+        return 0;
     }
 }

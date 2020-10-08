@@ -252,4 +252,28 @@ public class NQueensBoard {
 		}
 		return builder.toString();
 	}
+
+	// Estimation of the probability that a solution may be reached from a state
+	public double probabilisticEstimation() {
+		return ((double)(getSize() - getNumberOfQueensOnBoard())) / (1 - P());
+		// return ((double)(getSize() - getNumberOfQueensOnBoard())) * (1 - P());
+	}
+
+	public double P() {
+		if (getNumberOfQueensOnBoard() == getSize())
+			return 1.0;
+		else
+			return (double)getNumberOfNonAttackedPositions() / Math.pow((double)((getSize() - getNumberOfQueensOnBoard())*getSize()),1.5);
+	}
+	// Number of non-attacked positions
+	public int getNumberOfNonAttackedPositions() {
+		int count = 0;
+		for (int col = 0; col < getSize(); col++) {
+			for (int row = 0; row < getSize(); row++) {
+				XYLocation l = new XYLocation(col,row);
+				if (!isSquareUnderAttack(l)) count++;
+			}
+		}
+		return count;
+	}
 }

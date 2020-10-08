@@ -5,6 +5,7 @@ import aima.core.environment.nqueens.NQueensBoard.Config;
 import aima.core.environment.nqueens.NQueensFunctions;
 import aima.core.environment.nqueens.NQueensGenAlgoUtil;
 import aima.core.environment.nqueens.QueenAction;
+import aima.core.search.framework.Node;
 import aima.core.search.framework.SearchForActions;
 import aima.core.search.framework.problem.Problem;
 import aima.core.search.framework.qsearch.GraphSearch;
@@ -22,30 +23,30 @@ import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * Demonsrates how different search algorithms perform on the NQueens problem.
+ * Demonstrates how different search algorithms perform on the NQueens problem.
  * @author Ruediger Lunde
  * @author Ravi Mohan
  */
 
 public class NQueensDemo {
 
-	private static final int boardSize = 8;
+	private static final int boardSize = 16;
 
 	public static void main(String[] args) {
 		startNQueensDemo();
 	}
 
 	private static void startNQueensDemo() {
-		solveNQueensWithDepthFirstSearch();
-		solveNQueensWithBreadthFirstSearch();
+		//solveNQueensWithDepthFirstSearch();
+		//solveNQueensWithBreadthFirstSearch();
 		solveNQueensWithAStarSearch();
-		solveNQueensWithAStarSearch4e();
-		solveNQueensWithRecursiveDLS();
-		solveNQueensWithIterativeDeepeningSearch();
-		solveNQueensWithSimulatedAnnealingSearch();
-		solveNQueensWithHillClimbingSearch();
-		solveNQueensWithGeneticAlgorithmSearch();
-		solveNQueensWithRandomWalk();
+//		solveNQueensWithAStarSearch4e();
+//		solveNQueensWithRecursiveDLS();
+//		solveNQueensWithIterativeDeepeningSearch();
+//		solveNQueensWithSimulatedAnnealingSearch();
+//		solveNQueensWithHillClimbingSearch();
+//		solveNQueensWithGeneticAlgorithmSearch();
+//		solveNQueensWithRandomWalk();
 	}
 
 	private static void solveNQueensWithDepthFirstSearch() {
@@ -73,10 +74,22 @@ public class NQueensDemo {
 	private static void solveNQueensWithAStarSearch() {
 		System.out.println("\n--- NQueensDemo A* (complete state formulation, graph search 3e) ---");
 
+		// Espacio de búsqueda
 		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
-				(boardSize, Config.QUEENS_IN_FIRST_ROW);
-		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>
-				(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackingPairs);
+				(boardSize,
+//						Config.EMPTY // no usa
+						Config.QUEENS_IN_FIRST_ROW // determinista
+//						Config.QUEEN_IN_EVERY_COL // estocastica -> 10 soluciones
+				);
+
+//		 Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createIncrementalFormulationProblem(boardSize);
+
+		// Heurísticos
+		// Null heuristic
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>(new GraphSearch<>(), NQueensFunctions::nullHeuristic);
+
+//		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackingPairs);
+
 		Optional<List<QueenAction>> actions = search.findActions(problem);
 
 		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
@@ -199,5 +212,9 @@ public class NQueensDemo {
 		long stopTime = System.currentTimeMillis();
 		System.out.println("Solution found after generating " + i + " random configurations ("
 				+ (stopTime - startTime) + " ms).");
+	}
+
+	private static void getHeuristicProbabilisticEstimationOfSolution( Node<NQueensBoard,QueenAction> node){
+
 	}
 }
