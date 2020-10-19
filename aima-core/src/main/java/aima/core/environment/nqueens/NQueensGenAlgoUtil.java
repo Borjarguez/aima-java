@@ -40,6 +40,20 @@ public class NQueensGenAlgoUtil {
 		return new Individual<>(individualRepresentation);
 	}
 
+	private static ArrayList<Integer> shuffle(ArrayList<Integer> indRep){
+		Random rnd = new Random();
+		for(int i = 0; i < indRep.size(); i++){
+			int j = rnd.nextInt(indRep.size());
+
+			//Swap indRep[i] and indRep[j]
+			Integer tmp = indRep.get(i);
+			indRep.set(i, indRep.get(j));
+			indRep.set(j, tmp);
+		}
+
+		return indRep;
+	}
+
 	public static Collection<Integer> getFiniteAlphabetForBoardOfSize(int size) {
 		Collection<Integer> fab = new ArrayList<>();
 
