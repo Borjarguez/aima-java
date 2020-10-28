@@ -1,9 +1,6 @@
 package aima.core.environment.nqueens;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
 
 import aima.core.search.local.FitnessFunction;
@@ -35,23 +32,11 @@ public class NQueensGenAlgoUtil {
 	public static Individual<Integer> generateRandomIndividual(int boardSize) {
 		List<Integer> individualRepresentation = new ArrayList<>();
 		for (int i = 0; i < boardSize; i++) {
-			individualRepresentation.add(new Random().nextInt(boardSize));
+//			individualRepresentation.add(new Random().nextInt(boardSize));
+			individualRepresentation.add(i);
 		}
+		Collections.shuffle(individualRepresentation);
 		return new Individual<>(individualRepresentation);
-	}
-
-	private static ArrayList<Integer> shuffle(ArrayList<Integer> indRep){
-		Random rnd = new Random();
-		for(int i = 0; i < indRep.size(); i++){
-			int j = rnd.nextInt(indRep.size());
-
-			//Swap indRep[i] and indRep[j]
-			Integer tmp = indRep.get(i);
-			indRep.set(i, indRep.get(j));
-			indRep.set(j, tmp);
-		}
-
-		return indRep;
 	}
 
 	public static Collection<Integer> getFiniteAlphabetForBoardOfSize(int size) {

@@ -30,8 +30,7 @@ import java.util.function.Predicate;
 
 public class NQueensDemo {
 
-	private static final int boardSize = 8;
-
+	private static final int boardSize = 32;
 	public static void main(String[] args) {
 		startNQueensDemo();
 	}
@@ -75,24 +74,25 @@ public class NQueensDemo {
 		System.out.println("\n--- NQueensDemo A* (complete state formulation, graph search 3e) ---");
 
 		// Espacio de búsqueda
-		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
-				(boardSize,
+//		Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createCompleteStateFormulationProblem
+//				(boardSize,
 //						Config.EMPTY // no usa
-						Config.QUEENS_IN_FIRST_ROW // determinista
+//						Config.QUEENS_IN_FIRST_ROW // interpretación determinista
 //						Config.QUEEN_IN_EVERY_COL // estocastica -> 10 soluciones
-				);
+//				);
 
-//		 Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createIncrementalFormulationProblem(boardSize);
+		// Solo usar con h2
+		 Problem<NQueensBoard, QueenAction> problem = NQueensFunctions.createIncrementalFormulationProblem(boardSize);
 
 		// Heurísticos
 		// Null heuristic
-		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>(new GraphSearch<>(), NQueensFunctions::nullHeuristic);
-
+//		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>(new GraphSearch<>(), NQueensFunctions::nullHeuristic);
 //		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>(new GraphSearch<>(), NQueensFunctions::getNumberOfAttackingPairs);
+		SearchForActions<NQueensBoard, QueenAction> search = new AStarSearch<>(new GraphSearch<>(), NQueensFunctions::getHeuristicProbabilisticEstimationOfSolution);
 
 		Optional<List<QueenAction>> actions = search.findActions(problem);
 
-		actions.ifPresent(qActions -> qActions.forEach(System.out::println));
+		//actions.ifPresent(qActions -> qActions.forEach(System.out::println));
 		System.out.println(search.getMetrics());
 	}
 
@@ -172,7 +172,8 @@ public class NQueensDemo {
 
 		// Generate an initial population
 		Set<Individual<Integer>> population = new HashSet<>();
-		for (int i = 0; i < 50; i++)
+
+		for (int i = 0; i < popSize; i++)
 			population.add(NQueensGenAlgoUtil.generateRandomIndividual(boardSize));
 
 		GeneticAlgorithm<Integer> ga = new GeneticAlgorithm<>(boardSize, NQueensGenAlgoUtil.getFiniteAlphabetForBoardOfSize(boardSize), mutationPropability);
@@ -197,17 +198,17 @@ public class NQueensDemo {
 		System.out.println("Took            = " + ga.getTimeInMilliseconds() + "ms.");
 
 		// Run till goal is achieved
-		bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, goalTest, 0L);
-		System.out.println("");
-		System.out.println("Max time unlimited, Best Individual:\n" +
-				NQueensGenAlgoUtil.getBoardForIndividual(bestIndividual));
-		System.out.println("Board Size      = " + boardSize);
-		System.out.println("# Board Layouts = " + (new BigDecimal(boardSize)).pow(boardSize));
-		System.out.println("Fitness         = " + fitnessFunction.apply(bestIndividual));
-		System.out.println("Is Goal         = " + goalTest.test(bestIndividual));
-		System.out.println("Population Size = " + ga.getPopulationSize());
-		System.out.println("Itertions       = " + ga.getIterations());
-		System.out.println("Took            = " + ga.getTimeInMilliseconds() + "ms.");
+//		bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, goalTest, 0L);
+//		System.out.println("");
+//		System.out.println("Max time unlimited, Best Individual:\n" +
+//				NQueensGenAlgoUtil.getBoardForIndividual(bestIndividual));
+//		System.out.println("Board Size      = " + boardSize);
+//		System.out.println("# Board Layouts = " + (new BigDecimal(boardSize)).pow(boardSize));
+//		System.out.println("Fitness         = " + fitnessFunction.apply(bestIndividual));
+//		System.out.println("Is Goal         = " + goalTest.test(bestIndividual));
+//		System.out.println("Population Size = " + ga.getPopulationSize());
+//		System.out.println("Itertions       = " + ga.getIterations());
+//		System.out.println("Took            = " + ga.getTimeInMilliseconds() + "ms.");
 	}
 
 	// Here, this trivial algorithm outperforms the genetic search approach as described in the textbook!
@@ -225,7 +226,4 @@ public class NQueensDemo {
 				+ (stopTime - startTime) + " ms).");
 	}
 
-	private static void getHeuristicProbabilisticEstimationOfSolution( Node<NQueensBoard,QueenAction> node){
-
-	}
 }

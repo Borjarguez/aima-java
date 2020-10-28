@@ -1,7 +1,5 @@
 package aima.core.environment.nqueens;
 
-import aima.core.agent.Action;
-import aima.core.environment.eightpuzzle.EightPuzzleBoard;
 import aima.core.search.framework.Node;
 import aima.core.search.framework.problem.GeneralProblem;
 import aima.core.search.framework.problem.Problem;
@@ -95,16 +93,26 @@ public class NQueensFunctions {
         return state.getNumberOfQueensOnBoard() == state.getSize() && state.getNumberOfAttackingPairs() == 0;
     }
 
+    // h0
+    public static double nullHeuristic(Node<NQueensBoard, QueenAction> node) {
+        return 0;
+    }
+
     /**
      * Estimates the distance to goal by the number of attacking pairs of queens on
      * the board.
+     * h1
      */
     public static double getNumberOfAttackingPairs(Node<NQueensBoard, QueenAction> node) {
         return node.getState().getNumberOfAttackingPairs();
     }
 
-    // h0
-    public static double nullHeuristic(Node<NQueensBoard, QueenAction> node) {
-        return 0;
+    //h2
+    public static double getHeuristicProbabilisticEstimationOfSolution(Node<NQueensBoard,QueenAction> node){
+        //non attacked tiles
+        int n = node.getState().getSize();
+        int k = node.getState().getNumberOfAttackingPairs();
+        double p = node.getState().probability();
+        return (n-k)/p;
     }
 }

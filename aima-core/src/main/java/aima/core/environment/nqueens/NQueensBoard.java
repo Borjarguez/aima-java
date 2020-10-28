@@ -15,7 +15,26 @@ import aima.core.util.datastructure.XYLocation;
  */
 public class NQueensBoard {
 
-	/** Parameters for initialization. */
+    public double probability() {
+		double non_attacked_tiles = 0;
+		for (int i = 0; i < getSize(); i++) {
+			for (int j = 0; j < getSize(); j++) {
+				if (!queenExistsAt(i, j) && !isSquareUnderAttack(new XYLocation(i, j)))
+					non_attacked_tiles++;
+			}
+		}
+
+		double available_space = 0;
+		for (int i = 0; i < getSize(); i++) {
+			for (int j = 0; j < getSize(); j++)
+				if (!isSquareHorizontallyAttacked(i, j) && !queenExistsAt(i, j))
+					available_space++;
+		}
+
+		return available_space == 0? 0 : non_attacked_tiles/available_space;
+    }
+
+    /** Parameters for initialization. */
 	public enum Config {
 		EMPTY, QUEENS_IN_FIRST_ROW, QUEEN_IN_EVERY_COL
 	}

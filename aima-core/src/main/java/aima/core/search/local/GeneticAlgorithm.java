@@ -132,17 +132,17 @@ public class GeneticAlgorithm<A> {
 		// repeat
 		int itCount = 0;
 		// EJERCICIO 1
-		bestIndividual = retrieveBestIndividual(population, fitnessFn);
-		System.out.println("\nGen " + itCount+ " AvgFitness: " + averageFitness(population, fitnessFn) + " BestFitness: " + fitnessFn.apply(bestIndividual));
+//		bestIndividual = retrieveBestIndividual(population, fitnessFn);
+//		System.out.println("\nGen " + itCount+ " AvgFitness: " + averageFitness(population, fitnessFn) + " BestFitness: " + fitnessFn.apply(bestIndividual));
 
 		do {
-			population = nextGeneration(population, fitnessFn, bestIndividual);
 			bestIndividual = retrieveBestIndividual(population, fitnessFn);
+			population = nextGeneration(population, fitnessFn, bestIndividual);
 			updateMetrics(population, ++itCount, System.currentTimeMillis() - startTime);
 
 			// Ejercicio 1: metricas mejor y poblacion -> necesario metodo para calcular el fitness medio
 			System.out.println("\nGen " + itCount+ " AvgFitness: " + averageFitness(population, fitnessFn) + " BestFitness: " + fitnessFn.apply(bestIndividual));
-
+			System.out.println("POPOPOPOPOPOPOO   " +population.size());
 			// until some individual is fit enough, or enough time has elapsed
 			if (maxTimeMilliseconds > 0L && (System.currentTimeMillis() - startTime) > maxTimeMilliseconds)
 				break;
@@ -157,9 +157,7 @@ public class GeneticAlgorithm<A> {
 
 	public double averageFitness(Collection<Individual<A>> population, FitnessFunction<A> fitnessFn){
 		double accfValue = 0.0;
-		for(Individual<A> individual: population){
-			accfValue += fitnessFn.apply(individual);
-		}
+		for(Individual<A> individual: population) accfValue += fitnessFn.apply(individual);
 		return accfValue/population.size();
 	}
 
@@ -247,7 +245,7 @@ public class GeneticAlgorithm<A> {
 	protected List<Individual<A>> nextGeneration(List<Individual<A>> population, FitnessFunction<A> fitnessFn, Individual<A> bestBefore) {
 		// new_population <- empty set
 		List<Individual<A>> newPopulation = new ArrayList<>(population.size());
-		// for i = 1 to SIZE(population) do
+		// for i = 1 to SIZE(population)
 		for (int i = 0; i < population.size(); i++) {
 			// x <- RANDOM-SELECTION(population, FITNESS-FN)
 			Individual<A> x = randomSelection(population, fitnessFn);
@@ -262,7 +260,7 @@ public class GeneticAlgorithm<A> {
 			// add child to new_population
 			newPopulation.add(child);
 		}
-		// EJERCICIO 5: eletismo
+		// EJERCICIO 5: elitismo
 		newPopulation.add(bestBefore);
 		notifyProgressTrackers(getIterations(), population);
 		return newPopulation;
@@ -281,11 +279,18 @@ public class GeneticAlgorithm<A> {
 		double[] fValues = new double[population.size()];
 		for (int i = 0; i < population.size(); i++) {
 			fValues[i] = fitnessFn.apply(population.get(i));
-			if(fValues[i] < minFitness) minFitness = fValues[i];
+			if(fValues[i] < minFitness)
+				minFitness = fValues[i];
 		}
 
 		// Normalize the fitness values
 		fValues = Util.normalize(fValues);
+
+		// Escalado del fitness. Le restamos el minFitness a todos
+		for (int i = 0; i < population.size(); i++) {
+			fValues[i] -= 0.9*minFitness;
+		}
+
 		double prob = random.nextDouble();
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
