@@ -131,9 +131,6 @@ public class GeneticAlgorithm<A> {
 
 		// repeat
 		int itCount = 0;
-		// EJERCICIO 1
-//		bestIndividual = retrieveBestIndividual(population, fitnessFn);
-//		System.out.println("\nGen " + itCount+ " AvgFitness: " + averageFitness(population, fitnessFn) + " BestFitness: " + fitnessFn.apply(bestIndividual));
 
 		do {
 			bestIndividual = retrieveBestIndividual(population, fitnessFn);
@@ -142,7 +139,7 @@ public class GeneticAlgorithm<A> {
 
 			// Ejercicio 1: metricas mejor y poblacion -> necesario metodo para calcular el fitness medio
 			System.out.println("\nGen " + itCount+ " AvgFitness: " + averageFitness(population, fitnessFn) + " BestFitness: " + fitnessFn.apply(bestIndividual));
-			System.out.println("POPOPOPOPOPOPOO   " +population.size());
+			System.out.println("POPOPOPOPOPOPOO   " + population.size());
 			// until some individual is fit enough, or enough time has elapsed
 			if (maxTimeMilliseconds > 0L && (System.currentTimeMillis() - startTime) > maxTimeMilliseconds)
 				break;
@@ -246,7 +243,7 @@ public class GeneticAlgorithm<A> {
 		// new_population <- empty set
 		List<Individual<A>> newPopulation = new ArrayList<>(population.size());
 		// for i = 1 to SIZE(population)
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < population.size()-1; i++) {
 			// x <- RANDOM-SELECTION(population, FITNESS-FN)
 			Individual<A> x = randomSelection(population, fitnessFn);
 			// y <- RANDOM-SELECTION(population, FITNESS-FN)
@@ -273,7 +270,6 @@ public class GeneticAlgorithm<A> {
 		Individual<A> selected = population.get(population.size() - 1);
 
 		// Determine all of the fitness values
-
 		// EJERCICIO 6: Fitness scaling
 		double minFitness = Double.MAX_VALUE;
 		double[] fValues = new double[population.size()];

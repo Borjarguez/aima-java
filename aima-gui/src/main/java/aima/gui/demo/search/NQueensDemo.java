@@ -162,6 +162,7 @@ public class NQueensDemo {
 
 	private static void solveNQueensWithGeneticAlgorithmSearch() {
 		System.out.println("\n--- NQueensDemo GeneticAlgorithm ---");
+
 		// declaracion de variables
 		final int popSize = 100;
 		final int numberOfGernerations = 100;
